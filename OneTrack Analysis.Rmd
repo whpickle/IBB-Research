@@ -1,0 +1,32 @@
+---
+title: "OneTrack Analysis"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Analysis
+
+```{r error = TRUE}
+library(tidyverse)
+library(lubridate)
+
+donor2021 <- read.csv("data2021.csv", stringsAsFactors = TRUE)
+donor_2021_df <- donor2021[, 3:4]
+
+donor_2021_df2 <- donor2021[, 4:5]
+donor_2021_df2$When. <- factor(donor_2021_df2$When., levels = month.name, ordered = TRUE)
+
+options(max.print=999999)
+data <- table(donor_2021_df2$How, donor_2021_df2$When.)
+data
+
+donor_2021_df <- donor_2021_df[donor_2021_df$Raised != "", ]
+donor_2021_df$Raised <- gsub(pattern = "[$,]", replacement = "", donor_2021_df$Raised)
+donor_2021_df$Raised <- as.numeric(donor_2021_df$Raised)
+
+ggplot(donor_2021_df, aes(x = seq_along(Raised), y = Raised)) + geom_point() + labs(x = "Index")
+plot(donor_2021_df$Raised, col = donor_2021_df$How., pch = 16, cex = .75, ylab = "Raised")
+```

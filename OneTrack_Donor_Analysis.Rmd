@@ -1,0 +1,58 @@
+---
+title: "OneTrack Data Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Initialization
+<!-- USE THE CODE CHUNK BELOW -->
+```{r error = TRUE}
+donor <- read.csv("donor.csv", stringsAsFactors = TRUE)
+```
+
+### Most Popular Platforms
+<!-- USE THE CODE CHUNK BELOW -->
+```{r error = TRUE}
+donor_det <- donor[donor$Details != "", ]
+donor_det$Details <- droplevels(donor_det$Details)
+
+details_freq <- table(donor_det$Details)
+updated_details_freq <- details_freq[details_freq >= 10]
+
+pie(updated_details_freq, main = "Pie Chart of Most Popular Platforms", cex = 0.75)
+
+
+```
+
+### Summary of Data by Month 
+<!-- USE THE CODE CHUNK BELOW -->
+```{r error = TRUE}
+donor_when <- donor[donor$When. %in% month.name, ]
+donor_when$When. <- droplevels(donor_when$When.)
+f_donor_when <- factor(donor_when$When, levels = month.name, ordered = TRUE)
+
+month_year <- table(donor_when$Year, f_donor_when)
+
+barplot(month_year, las = 2, cex.names = 0.75,
+        main = "Distribution of Donors by Month and Year",
+        ylim = c(0, 300),
+        legend = TRUE,
+        col = 1:6,
+        density = 35)
+```
+
+### Most Popular Donors by School
+<!-- USE THE CODE CHUNK BELOW -->
+```{r error = TRUE}
+donor_school <- donor[donor$School != "", ]
+donor_school$School <- droplevels(donor_school$School)
+
+school_freq <- table(donor_school$School)
+updated_school_freq <- school_freq[school_freq >= 15]
+
+pie(updated_school_freq, main = "Pie Chart of Donors by School", cex = 0.75)
+```
+
